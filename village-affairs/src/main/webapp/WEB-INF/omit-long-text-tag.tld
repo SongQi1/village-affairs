@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["To make it easier to access dynamic data;
+                        the Apache Struts framework includes a library of custom tags.
+                        The tags interact with the framework's validation and internationalization features;
+                        to ensure that input is correct and output is localized.
+                        The Struts Tags can be used with JSP FreeMarker or Velocity."]]></description>
+  <display-name>omit long text</display-name>
+  <tlib-version>2.3</tlib-version>
+  <short-name>omitText</short-name>
+  <uri>/omit-long-text-tag</uri>
+  <tag>
+    <description><![CDATA[omit long text]]></description>
+    <name>omitLongText</name>
+    <tag-class>com.bocs.web.tag.OmitLongTextTag</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <description><![CDATA[long text]]></description>
+      <name>text</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[permit show max length ]]></description>
+      <name>maxLength</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+</taglib>

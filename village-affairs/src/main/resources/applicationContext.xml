@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+				http://www.springframework.org/schema/context 
+				http://www.springframework.org/schema/context/spring-context-4.0.xsd
+				http://www.springframework.org/schema/aop 
+				http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+				http://www.springframework.org/schema/tx
+				http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+				http://www.springframework.org/schema/mvc 
+				http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<!-- 使用注解方式配置IOC -->
+	<context:annotation-config></context:annotation-config>
+	<!-- 使用@Component方式配置Bean -->
+	<context:component-scan base-package="com.bocs"></context:component-scan>
+
+	<!-- 启用@AspectJ 支持 使用注解方式配置AOP,proxy-target-class="true"表示可以对没有实现接口的类产生动态代理 -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+	<!-- 资源文件配置方式 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:mailserver.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- c3p0连接池配置 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<!-- 用户名 -->
+		<property name="user" value="${user}" />
+		<!-- 用户密码 -->
+		<property name="password" value="${password}" />
+		<property name="driverClass" value="${driverClass}" />
+		<property name="jdbcUrl" value="${jdbcUrl}" />
+
+		<!--连接池中保留的最大连接数。默认值: 15 -->
+		<property name="maxPoolSize" value="${maxPoolSize}" />
+		<!-- 连接池中保留的最小连接数，默认为：3 -->
+		<property name="minPoolSize" value="${minPoolSize}" />
+		<!-- 初始化连接池中的连接数，取值应在minPoolSize与maxPoolSize之间，默认为3 -->
+		<property name="initialPoolSize" value="${initialPoolSize}" />
+
+		<!--最大空闲时间，60秒内未使用则连接被丢弃。若为0则永不丢弃。默认值: 0 -->
+		<property name="maxIdleTime" value="${maxIdleTime}" />
+
+		<!-- 当连接池连接耗尽时，客户端调用getConnection()后等待获取新连接的时间，超时后将抛出SQLException，如设为0则无限期等待。单位毫秒。默认: 
+			0 -->
+		<property name="checkoutTimeout" value="${checkoutTimeout}" />
+
+		<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。默认值: 3 -->
+		<property name="acquireIncrement" value="${acquireIncrement}" />
+
+		<!--定义在从数据库获取新连接失败后重复尝试的次数。默认值: 30 ；小于等于0表示无限次 -->
+		<property name="acquireRetryAttempts" value="${acquireRetryAttempts}" />
+
+		<!--重新尝试的时间间隔，默认为：1000毫秒 -->
+		<property name="acquireRetryDelay" value="${acquireRetryDelay}" />
+
+		<!--关闭连接时，是否提交未提交的事务，默认为false，即关闭连接，回滚未提交的事务 -->
+		<property name="autoCommitOnClose" value="${autoCommitOnClose}"></property>
+
+		<!--c3p0将建一张名为Test的空表，并使用其自带的查询语句进行测试。如果定义了这个参数那么属性preferredTestQuery将被忽略。你不能在这张Test表上进行任何操作，它将只供c3p0测试使用。默认值: 
+			null -->
+		<property name="preferredTestQuery" value="${preferredTestQuery}"></property>
+
+		<!--如果为false，则获取连接失败将会引起所有等待连接池来获取连接的线程抛出异常，但是数据源仍有效保留，并在下次调用getConnection()的时候继续尝试获取连接。如果设为true，那么在尝试获取连接失败后该数据源将申明已断开并永久关闭。默认: 
+			false -->
+		<property name="breakAfterAcquireFailure" value="${breakAfterAcquireFailure}" />
+
+		<!--每60秒检查所有连接池中的空闲连接。默认值: 0，不检查 -->
+		<property name="idleConnectionTestPeriod" value="${idleConnectionTestPeriod}" />
+		<property name="testConnectionOnCheckin" value="${testConnectionOnCheckin}" />
+		<!--c3p0全局的PreparedStatements缓存的大小。如果maxStatements与maxStatementsPerConnection均为0，则缓存不生效，只要有一个不为0，则语句的缓存就能生效。如果默认值: 
+			0 -->
+		<property name="maxStatements" value="${maxStatements}" />
+		<!--maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存statements数。默认值: 0 -->
+		<property name="maxStatementsPerConnection" value="${maxStatementsPerConnection}" />
+	</bean>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!-- 注入dataSource -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 使用包扫描的方式配置ORMapping -->
+		<property name="packagesToScan">
+			<list>
+				<value>com.bocs.special.model</value>
+			</list>
+		</property>
+		<!-- 配置hibernate的一些属性 -->
+		<property name="hibernateProperties">
+			<props>
+			
+				<prop key="hibernate.dialect">${dailect}</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.use_outer_join">true</prop>
+				<prop key="hibernate.jdbc.fetch_size">30</prop>
+				<prop key="hibernate.jdbc.batch_size">30</prop>
+				<prop key="hibernate.jdbc.batch_versioned_data">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>
+				<prop key="javax.persistence.validation.mode">none</prop>
+				<!-- hibernate.id.new_generator_mappings参数设置：MySQL和SQL Server为false，Oracle为true -->
+				<prop key="hibernate.id.new_generator_mappings">true</prop>
+
+				<!-- 启用hibernate二级缓存-->
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="org.hibernate.cache.spi.RegionFactory">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.SingletonEhCacheProvider</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 使用spring对hibernate的事务管理 -->
+	<bean id="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<!-- 使用注解方式配置声明式事务 -->
+	<tx:annotation-driven transaction-manager="txManager"></tx:annotation-driven>
+
+	<bean class="com.bocs.util.SpringContextUtil"></bean>
+	
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.host}"></property>
+		<property name="username" value="${mail.username}"></property>
+		<property name="password" value="${mail.password}"></property>
+	</bean>
+	<bean id="mailService" class="com.bocs.util.MailService">
+		<property name="mailSender" ref="mailSender"></property>
+	</bean>
+</beans>

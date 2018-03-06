@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+  <description><![CDATA["To make it easier to access dynamic data;
+                        the Apache Struts framework includes a library of custom tags.
+                        The tags interact with the framework's validation and internationalization features;
+                        to ensure that input is correct and output is localized.
+                        The Struts Tags can be used with JSP FreeMarker or Velocity."]]></description>
+  <display-name>hide id card no</display-name>
+  <tlib-version>2.3</tlib-version>
+  <short-name>hideIdCardNo</short-name>
+  <uri>/hide-id-card-tag</uri>
+  <tag>
+    <description><![CDATA[hide id card no]]></description>
+    <name>hideIdCardNo</name>
+    <tag-class>com.bocs.web.tag.HideIdCardTag</tag-class>
+    <body-content>scriptless</body-content>
+    <attribute>
+      <description><![CDATA[id card no]]></description>
+      <name>idCard</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[permit show front length ]]></description>
+      <name>front</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <description><![CDATA[permit show end length ]]></description>
+      <name>end</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+</taglib>
